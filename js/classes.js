@@ -1,0 +1,1 @@
+// This file sets up all the chess piece classes that will be used in the main application.

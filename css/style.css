@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+body {
+    height: 100vh;
+}
+
 #board {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -20,11 +24,11 @@
 }
 
 .light {
-    background-color: tan;
+    background-color: lightcyan;
 }
 
 .dark {
-    background-color: brown;
+    background-color: teal;
 }
 
 

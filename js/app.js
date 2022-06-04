@@ -38,7 +38,7 @@ function boardSetup() {
 }
 
 function init() {
-
+    boardSetup()
 }
 
 function handleBoardClick() {
@@ -47,4 +47,4 @@ function handleBoardClick() {
 
 
 /*--- Main ---*/
-boardSetup();
+init();
