@@ -1,0 +1,62 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    height: 500px;
+    width: 500px;
+    border: 1px solid black;
+    margin: auto;
+}
+
+.board-cell {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.light {
+    background-color: tan;
+}
+
+.dark {
+    background-color: brown;
+}
+
+
+/* Classes created for highlighting player moves. */
+@keyframes pulseHighlighted {
+    0%, 100% {
+        background-color: rgba(255, 217, 0, 0.8);
+    }
+    50% {
+        background-color: rgba(255, 217, 0, 0.3);
+    }
+}
+
+.highlighted {
+    animation: pulseHighlighted 3s infinite;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    margin: auto;
+}
+
+@keyframes pulseTarget {
+    0%, 100% {
+        background-color: rgba(255, 0, 0, .7);
+    }
+    50% {
+        background-color: rgba(255, 0, 0, .4);
+    }
+}
+
+.target {
+    animation: pulseTarget 3s infinite;
+}
+
+/* End of classes intended for highlighting player moves */
