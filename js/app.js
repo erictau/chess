@@ -3,7 +3,33 @@ const NUM_ROWS = 8
 const NUM_COLUMNS = 8
 
 /*--- State ---*/
-let boardState = [[],[],[],[],[],[],[],[]]
+const boardState = [[],[],[],[],[],[],[],[]]
+const player1 = {
+    id: 'player 1',
+    startRow: 7,
+    color: 'dark',
+    pieces: {
+        king: null,
+        queen: null,
+        bishop1: null, bishop2: null,
+        knight1: null, knight2: null,
+        rook1: null, rook2: null,
+        pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
+    }
+}
+const player2 = {
+    id: 'player 2',
+    startRow: 0,
+    color: 'light',
+    pieces: {
+        king: null,
+        queen: null,
+        bishop1: null, bishop2: null,
+        knight1: null, knight2: null,
+        rook1: null, rook2: null,
+        pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
+    }
+}
 
 /*--- Cache ---*/
 const board = document.querySelector('#board');
@@ -37,12 +63,20 @@ function boardSetup() {
     }
 }
 
+function pieceSetup() {
+    // Instantiate all pieces for both sides. Will need to hard-code the coordinates.
+    
+
+}
+
 function init() {
-    boardSetup()
+    boardSetup();
+    pieceSetup();
 }
 
 function handleBoardClick() {
-    
+    // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
+    // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
 }
 
 
