@@ -3,7 +3,7 @@ const NUM_ROWS = 8
 const NUM_COLUMNS = 8
 
 /*--- State ---*/
-const boardState = [
+let boardState = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -12,7 +12,7 @@ const boardState = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null]]
-const player1 = {
+let player1 = {
     id: 'player 1',
     startRow: 7,
     forwardMove: -1,
@@ -26,7 +26,7 @@ const player1 = {
         pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
     }
 }
-const player2 = {
+let player2 = {
     id: 'player 2',
     startRow: 0,
     forwardMove: 1,
@@ -40,8 +40,8 @@ const player2 = {
         pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
     }
 }
-
 const players = [player1, player2]
+let playerTurn = 0;
 
 /*--- Cache ---*/
 const board = document.querySelector('#board');
@@ -50,6 +50,49 @@ const board = document.querySelector('#board');
 board.addEventListener('click', handleBoardClick);
 
 /*--- Functions ---*/
+function init() {
+    boardState = [
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null]]
+    player1 = {
+        id: 'player 1',
+        startRow: 7,
+        forwardMove: -1,
+        color: 'dark',
+        pieces: {
+            king: null,
+            queen: null,
+            bishop1: null, bishop2: null,
+            knight1: null, knight2: null,
+            rook1: null, rook2: null,
+            pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
+        }
+    }
+    player2 = {
+        id: 'player 2',
+        startRow: 0,
+        forwardMove: 1,
+        color: 'light',
+        pieces: {
+            king: null,
+            queen: null,
+            bishop1: null, bishop2: null,
+            knight1: null, knight2: null,
+            rook1: null, rook2: null,
+            pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
+        }
+    }    
+    playerTurn = 0;
+    boardSetup();
+    pieceSetup();
+    renderPieces();
+}
 
 // Programmatically sets up the 64 divs representing each board position. Sets each div's class & id and appends to board.
 function boardSetup() {
@@ -74,6 +117,7 @@ function boardSetup() {
         board.appendChild(divEl);
     }
 }
+
 
 function pieceSetup() {
     // Instantiate all pieces for both sides. Will need to hard-code the coordinates.
@@ -105,23 +149,32 @@ function pieceSetup() {
             boardState[player.pieces[piece].position[0]][player.pieces[piece].position[1]] = player.pieces[piece];
         }
     })
-console.log(boardState)
-renderPieces()
 }
 
-function init() {
-    boardSetup();
-    pieceSetup();
-}
 
-function handleBoardClick() {
+function handleBoardClick(evt) {
     // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
+    if (evt.target.tagName === 'IMG') {
+        let coordinates = evt.target.parentElement.id.split(',');
+        selectPiece(coordinates);
+    }
+}
+
+
+function selectPiece(coordinates) {
+    const piece = boardState[coordinates[0]][coordinates[1]];
+    if (piece.player === players[playerTurn]) {
+        piece.highlightMoves();
+        console.log("test");
+    }
 }
 
 function renderPieces() {
     boardState.forEach((row, i) => {
         row.forEach((cell, j) => {
+            // Clear the contents of the board before adding a new img element.
+            board.children[`${i},${j}`].innerHTML = ''
             if (cell) {
                 let imgEl = document.createElement('img');
                 imgEl.src = cell.img;
@@ -129,6 +182,11 @@ function renderPieces() {
             }
         })
     })
+}
+
+
+function changeTurn() {
+    playerTurn = (playerTurn + 1) % 2
 }
 
 /*--- Main ---*/
