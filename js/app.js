@@ -3,10 +3,19 @@ const NUM_ROWS = 8
 const NUM_COLUMNS = 8
 
 /*--- State ---*/
-const boardState = [[],[],[],[],[],[],[],[]]
+const boardState = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null]]
 const player1 = {
     id: 'player 1',
     startRow: 7,
+    forwardMove: -1,
     color: 'dark',
     pieces: {
         king: null,
@@ -20,6 +29,7 @@ const player1 = {
 const player2 = {
     id: 'player 2',
     startRow: 0,
+    forwardMove: 1,
     color: 'light',
     pieces: {
         king: null,
@@ -30,6 +40,8 @@ const player2 = {
         pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
     }
 }
+
+const players = [player1, player2]
 
 /*--- Cache ---*/
 const board = document.querySelector('#board');
@@ -65,8 +77,36 @@ function boardSetup() {
 
 function pieceSetup() {
     // Instantiate all pieces for both sides. Will need to hard-code the coordinates.
-    
+    players.forEach(player => {
+        // Major pieces in 1st row
+        player.pieces.rook1 = new Rook([player.startRow, 0], player);
+        player.pieces.knight1 = new Knight([player.startRow, 1], player);
+        player.pieces.bishop1 = new Bishop([player.startRow, 2], player);
+        player.pieces.queen = new Queen([player.startRow, 3], player);
+        player.pieces.king = new King([player.startRow, 4], player);
+        player.pieces.bishop2 = new Bishop([player.startRow, 5], player);
+        player.pieces.knight2 = new Knight([player.startRow, 6], player);
+        player.pieces.rook2 = new Rook([player.startRow, 7], player);
 
+        // Pawns in 2nd row
+        player.pieces.pawn1 = new Pawn([player.startRow + player.forwardMove, 0], player);
+        player.pieces.pawn2 = new Pawn([player.startRow + player.forwardMove, 1], player);
+        player.pieces.pawn3 = new Pawn([player.startRow + player.forwardMove, 2], player);
+        player.pieces.pawn4 = new Pawn([player.startRow + player.forwardMove, 3], player);
+        player.pieces.pawn5 = new Pawn([player.startRow + player.forwardMove, 4], player);
+        player.pieces.pawn6 = new Pawn([player.startRow + player.forwardMove, 5], player);
+        player.pieces.pawn7 = new Pawn([player.startRow + player.forwardMove, 6], player);
+        player.pieces.pawn8 = new Pawn([player.startRow + player.forwardMove, 7], player);
+    })
+
+    // Update board state
+    players.forEach(player => {
+        for (let piece in player.pieces) {
+            boardState[player.pieces[piece].position[0]][player.pieces[piece].position[1]] = player.pieces[piece];
+        }
+    })
+console.log(boardState)
+renderPieces()
 }
 
 function init() {
@@ -79,6 +119,17 @@ function handleBoardClick() {
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
 }
 
+function renderPieces() {
+    boardState.forEach((row, i) => {
+        row.forEach((cell, j) => {
+            if (cell) {
+                let imgEl = document.createElement('img');
+                imgEl.src = cell.img;
+                board.children[`${i},${j}`].appendChild(imgEl);
+            }
+        })
+    })
+}
 
 /*--- Main ---*/
 init();
