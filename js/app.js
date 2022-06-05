@@ -143,6 +143,7 @@ function pieceSetup() {
         player.pieces.pawn8 = new Pawn([player.startRow + player.forwardMove, 7], player);
     })
 
+    console.log(player1, player2)
     // Update board state
     players.forEach(player => {
         for (let piece in player.pieces) {
@@ -165,8 +166,7 @@ function handleBoardClick(evt) {
 function selectPiece(coordinates) {
     const piece = boardState[coordinates[0]][coordinates[1]];
     if (piece.player === players[playerTurn]) {
-        piece.highlightMoves();
-        console.log("test");
+        piece.move(piece.highlightMoves());
     }
 }
 
