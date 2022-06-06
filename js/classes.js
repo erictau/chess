@@ -11,7 +11,7 @@ class BoardPiece {
     }
 
     move(potentialMoves) {
-        
+
     }
 }
 
@@ -36,9 +36,9 @@ class King extends BoardPiece {
                 let row = this.position[0] + i;
                 let col = this.position[1] + j;
                 // If out of bounds, break.
-                if (row < 0 || row > 7 || col < 0 || row > 7) break;
+                if (isOutOfBounds(row, col)) break;
                 let cellEl = document.getElementById(`${row},${col}`);
-                if (boardState[row][col] && boardState[row][col].player !== players[playerTurn]) {
+                if (boardState[row][col] && boardState[row][col].player !== this.player) {
                     potentialMoves.push([row, col]);
                     cellEl.classList.add('target');
                 } else if (!boardState[row][col]) {
@@ -46,7 +46,7 @@ class King extends BoardPiece {
                     let divEl = document.createElement('div');
                     divEl.classList.add('highlighted')
                     cellEl.appendChild(divEl);
-                } 
+                }
             }
         }
         return potentialMoves;
@@ -64,7 +64,7 @@ class Queen extends BoardPiece {
     }
 
     highlightMoves() {
-        
+
     }
 }
 
@@ -79,7 +79,7 @@ class Bishop extends BoardPiece {
     }
 
     highlightMoves() {
-        
+
     }
 }
 
@@ -94,7 +94,7 @@ class Knight extends BoardPiece {
     }
 
     highlightMoves() {
-        
+
     }
 }
 
@@ -109,7 +109,7 @@ class Rook extends BoardPiece {
     }
 
     highlightMoves() {
-        
+
     }
 }
 
@@ -125,7 +125,37 @@ class Pawn extends BoardPiece {
     }
 
     highlightMoves() {
-        
+        const potentialMoves = [];
+        // Check diagonal positions for opponent pieces first.
+        for (let i = -1; i <= 1; i++) {
+            let row = this.position[0] + this.player.forwardMove;
+            let col = this.position[1] + i;
+            let cellEl = document.getElementById(`${row},${col}`);
+
+            if (i !== 0) {
+                if (boardState[row][col] && boardState[row][col].player !== this.player) {
+                    potentialMoves.push([row, col]);
+                    cellEl.classList.add('target');
+                }
+            } else {
+                if (!boardState[row][col]) {
+                    potentialMoves.push([row, col]);
+                    let divEl = document.createElement('div');
+                    divEl.classList.add('highlighted')
+                    cellEl.appendChild(divEl);
+                    if (!boardState[row + this.player.forwardMove][col]) {
+                        potentialMoves.push([row, col]);
+                        let divEl = document.createElement('div');
+                        divEl.classList.add('highlighted')
+                        let nextCellEl = document.getElementById(`${row + this.player.forwardMove},${col}`)
+                        nextCellEl.appendChild(divEl);
+                    }
+                }
+            }
+        }
+        return potentialMoves;
+
+
     }
 
     promotion() {

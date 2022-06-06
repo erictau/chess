@@ -50,49 +50,24 @@ const board = document.querySelector('#board');
 board.addEventListener('click', handleBoardClick);
 
 /*--- Functions ---*/
-function init() {
-    boardState = [
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null]]
-    player1 = {
-        id: 'player 1',
-        startRow: 7,
-        forwardMove: -1,
-        color: 'dark',
-        pieces: {
-            king: null,
-            queen: null,
-            bishop1: null, bishop2: null,
-            knight1: null, knight2: null,
-            rook1: null, rook2: null,
-            pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
-        }
-    }
-    player2 = {
-        id: 'player 2',
-        startRow: 0,
-        forwardMove: 1,
-        color: 'light',
-        pieces: {
-            king: null,
-            queen: null,
-            bishop1: null, bishop2: null,
-            knight1: null, knight2: null,
-            rook1: null, rook2: null,
-            pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
-        }
-    }    
+function init() { 
     playerTurn = 0;
+    resetPieces();
     boardSetup();
     pieceSetup();
     renderPieces();
 }
+
+
+function resetPieces() {
+    // Clear board
+    for (let i = 0; i < boardState.length; i++) {
+        for (let j = 0; j < boardState.length; j++) {
+            boardState[i][j] = null;
+        }
+    }
+}
+
 
 // Programmatically sets up the 64 divs representing each board position. Sets each div's class & id and appends to board.
 function boardSetup() {
@@ -141,9 +116,9 @@ function pieceSetup() {
         player.pieces.pawn6 = new Pawn([player.startRow + player.forwardMove, 5], player);
         player.pieces.pawn7 = new Pawn([player.startRow + player.forwardMove, 6], player);
         player.pieces.pawn8 = new Pawn([player.startRow + player.forwardMove, 7], player);
+
     })
 
-    console.log(player1, player2)
     // Update board state
     players.forEach(player => {
         for (let piece in player.pieces) {
@@ -170,6 +145,7 @@ function selectPiece(coordinates) {
     }
 }
 
+
 function renderPieces() {
     boardState.forEach((row, i) => {
         row.forEach((cell, j) => {
@@ -187,6 +163,18 @@ function renderPieces() {
 
 function changeTurn() {
     playerTurn = (playerTurn + 1) % 2
+}
+
+function addTarget() {
+
+}
+
+function addHighlight() {
+
+}
+
+function isOutOfBounds(row, col) {
+    return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS;
 }
 
 /*--- Main ---*/

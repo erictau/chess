@@ -24,11 +24,11 @@ body {
 }
 
 .light {
-    background-color: lightcyan;
+    background-color: tan;
 }
 
 .dark {
-    background-color: teal;
+    background-color: brown;
 }
 
 
@@ -44,9 +44,8 @@ body {
 
 .highlighted {
     animation: pulseHighlighted 3s infinite;
-    width: 50%;
-    height: 50%;
-    border-radius: 50%;
+    width: 100%;
+    height: 100%;
     margin: auto;
 }
 
