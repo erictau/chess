@@ -40,7 +40,8 @@ let player2 = {
         pawn1: null, pawn2: null, pawn3: null, pawn4: null, pawn5: null, pawn6: null, pawn7: null, pawn8: null
     }
 }
-const players = [player1, player2]
+const players = [player1, player2];
+let areMovesHighlighted = false;
 let playerTurn = 0;
 
 /*--- Cache ---*/
@@ -131,6 +132,10 @@ function pieceSetup() {
 function handleBoardClick(evt) {
     // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
+    if (areMovesHighlighted) {
+        
+    }
+    
     if (evt.target.tagName === 'IMG') {
         let coordinates = evt.target.parentElement.id.split(',');
         selectPiece(coordinates);
@@ -141,7 +146,7 @@ function handleBoardClick(evt) {
 function selectPiece(coordinates) {
     const piece = boardState[coordinates[0]][coordinates[1]];
     if (piece.player === players[playerTurn]) {
-        piece.move(piece.highlightMoves());
+        piece.highlightMoves();
     }
 }
 
@@ -166,18 +171,25 @@ function changeTurn() {
 }
 
 function addTarget(row, col, potentialMoves) {
-    let cellEl = document.getElementById(`${row},${col}`);
-    potentialMoves.push([row, col]);
-    cellEl.classList.add('target');
+    potentialMoves.target.push([row, col]);
+    areMovesHighlighted = true;
 }
 
 function addHighlight(row, col, potentialMoves) {
-    let cellEl = document.getElementById(`${row},${col}`);
-    potentialMoves.push([row, col]);
-    let divEl = document.createElement('div');
-    divEl.classList.add('highlighted')
-    cellEl.appendChild(divEl);
-    console.log(potentialMoves);
+    potentialMoves.highlight.push([row, col]);
+    areMovesHighlighted = true;
+}
+
+function renderMoves(piece) {
+    for (target of piece.potentialMoves.target) {
+        document.getElementById(`${target[0]},${target[1]}`).classList.add('target');
+    }
+    for (highlight of piece.potentialMoves.highlight) {
+        let cellEl = document.getElementById(`${highlight[0]},${highlight[1]}`);
+        let divEl = document.createElement('div');
+        divEl.classList.add('highlighted');
+        cellEl.appendChild(divEl);
+    }
 }
 
 function isOutOfBounds(row, col) {

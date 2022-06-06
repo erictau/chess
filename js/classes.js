@@ -4,13 +4,14 @@ class BoardPiece {
     constructor(position, player) {
         this.position = position;
         this.player = player;
+        this.potentialMoves = {target: [], highlight: []};
     }
 
     highlightMoves() {
 
     }
 
-    move(potentialMoves) {
+    move() {
 
     }
 }
@@ -26,7 +27,8 @@ class King extends BoardPiece {
     }
 
     highlightMoves() {
-        const potentialMoves = []
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 // Check if cell is occupied
@@ -36,15 +38,15 @@ class King extends BoardPiece {
                 let row = this.position[0] + i;
                 let col = this.position[1] + j;
                 // If out of bounds, break.
-                if (isOutOfBounds(row, col)) break;
+                if (isOutOfBounds(row, col)) continue;
                 if (isEnemyPiece(row, col)) {
-                    addTarget(row, col, potentialMoves);
+                    addTarget(row, col, this.potentialMoves);
                 } else if (isEmptyCell(row, col)) {
-                    addHighlight(row, col, potentialMoves);
+                    addHighlight(row, col, this.potentialMoves);
                 }
             }
         }
-        return potentialMoves;
+        renderMoves(this);
     }
 }
 
@@ -120,28 +122,31 @@ class Pawn extends BoardPiece {
     }
 
     highlightMoves() {
-        const potentialMoves = [];
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
         // Check diagonal positions for opponent pieces first.
         for (let i = -1; i <= 1; i++) {
             let row = this.position[0] + this.player.forwardMove;
             let col = this.position[1] + i;
+            if (isOutOfBounds(row, col)) continue;
 
+            // Pawns can only eat other pieces diagonally. Therefore, we can only add a opponent piece as a target when i != 0.
             if (i !== 0) {
                 if (isEnemyPiece(row, col)) {
-                    addTarget(row, col, potentialMoves);
+                    addTarget(row, col, this.potentialMoves);
                 }
             } else {
                 if (isEmptyCell(row, col)) {
-                    addHighlight(row, col, potentialMoves);
+                    addHighlight(row, col, this.potentialMoves);
                     // Updates row value and checks the next cell if it is the pawn's first turn.
                     row = row + this.player.forwardMove;
                     if (isEmptyCell(row, col) && this.firstTurn) {
-                        addHighlight(row, col, potentialMoves);
+                        addHighlight(row, col, this.potentialMoves);
                     }
                 }
             }
-        }
-        return potentialMoves;
+        } 
+        renderMoves(this);
     }
 
     promotion() {
