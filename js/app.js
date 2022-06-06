@@ -139,33 +139,25 @@ function handleBoardClick(evt) {
         let clickedID = evt.target.parentElement.id.split(',');
         if (isMatchingArray(clickedID, selectedPiece.position)) {
             clearRenderedMoves();
-            selectedPiece = null;
+            clearMoveState();
             return;
         } 
         
         // Checks if player clicked on a potential move to move piece to that location.
         for (let i = 0; i < selectedPiece.potentialMoves.target.length; i++) {
             if (isMatchingArray(clickedID, selectedPiece.potentialMoves.target[i])) {
-                selectedPiece.eat();
-                clearRenderedMoves();
-                clearMoveState();
+                selectedPiece.eat(selectedPiece.potentialMoves.target[i]);
+                changeTurn();
                 return;
             }
         }
         for (let i = 0; i < selectedPiece.potentialMoves.highlight.length; i++) {
             if (isMatchingArray(clickedID, selectedPiece.potentialMoves.highlight[i])) {
-                selectedPiece.move();
-                clearRenderedMoves();
-                clearMoveState();
+                selectedPiece.move(selectedPiece.potentialMoves.highlight[i]);
+                changeTurn();
                 return;
             }
         }
-        
-
-        // deselect or move
-        // clear potentialMoves
-        // clear rendered moves
-        // change selectedPiece to null
         
     } else if (evt.target.tagName === 'IMG') {
         // select piece and add its potential moves to potentialMoves
@@ -221,7 +213,10 @@ function renderPieces() {
 
 
 function changeTurn() {
-    playerTurn = (playerTurn + 1) % 2
+    clearRenderedMoves();
+    clearMoveState();
+    renderPieces();
+    playerTurn = (playerTurn + 1) % 2;
 }
 
 function addTarget(row, col, piece) {

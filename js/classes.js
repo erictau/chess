@@ -8,15 +8,18 @@ class BoardPiece {
     }
 
     highlightMoves() {
-
+        // To be overloaded in sub classes.
     }
 
-    move() {
-        console.log("moving")
+    move(newCell) {
+        boardState[this.position[0]][this.position[1]] = null;
+        this.position = newCell;
+        boardState[this.position[0]][this.position[1]] = this;
     }
 
-    eat() {
-        console.log("eating")
+    eat(newCell) {
+        selectPieceFromState(newCell).position = 'removed';
+        this.move(newCell);
     }
 }
 
@@ -123,6 +126,10 @@ class Pawn extends BoardPiece {
     highlightMoves() {
         this.potentialMoves.target = [];
         this.potentialMoves.highlight = [];
+
+        // Sets state of "first turn" prior to highlighting any potential moves
+        if (this.position[0] !== this.player.startRow + this.player.forwardMove) this.firstTurn = false;
+
         // Check diagonal positions for opponent pieces first.
         for (let i = -1; i <= 1; i++) {
             let row = this.position[0] + this.player.forwardMove;
