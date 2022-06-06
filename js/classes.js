@@ -37,15 +37,10 @@ class King extends BoardPiece {
                 let col = this.position[1] + j;
                 // If out of bounds, break.
                 if (isOutOfBounds(row, col)) break;
-                let cellEl = document.getElementById(`${row},${col}`);
-                if (boardState[row][col] && boardState[row][col].player !== this.player) {
-                    potentialMoves.push([row, col]);
-                    cellEl.classList.add('target');
-                } else if (!boardState[row][col]) {
-                    potentialMoves.push([row, col]);
-                    let divEl = document.createElement('div');
-                    divEl.classList.add('highlighted')
-                    cellEl.appendChild(divEl);
+                if (isEnemyPiece(row, col)) {
+                    addTarget(row, col, potentialMoves);
+                } else if (isEmptyCell(row, col)) {
+                    addHighlight(row, col, potentialMoves);
                 }
             }
         }
@@ -130,32 +125,23 @@ class Pawn extends BoardPiece {
         for (let i = -1; i <= 1; i++) {
             let row = this.position[0] + this.player.forwardMove;
             let col = this.position[1] + i;
-            let cellEl = document.getElementById(`${row},${col}`);
 
             if (i !== 0) {
-                if (boardState[row][col] && boardState[row][col].player !== this.player) {
-                    potentialMoves.push([row, col]);
-                    cellEl.classList.add('target');
+                if (isEnemyPiece(row, col)) {
+                    addTarget(row, col, potentialMoves);
                 }
             } else {
-                if (!boardState[row][col]) {
-                    potentialMoves.push([row, col]);
-                    let divEl = document.createElement('div');
-                    divEl.classList.add('highlighted')
-                    cellEl.appendChild(divEl);
-                    if (!boardState[row + this.player.forwardMove][col]) {
-                        potentialMoves.push([row, col]);
-                        let divEl = document.createElement('div');
-                        divEl.classList.add('highlighted')
-                        let nextCellEl = document.getElementById(`${row + this.player.forwardMove},${col}`)
-                        nextCellEl.appendChild(divEl);
+                if (isEmptyCell(row, col)) {
+                    addHighlight(row, col, potentialMoves);
+                    // Updates row value and checks the next cell if it is the pawn's first turn.
+                    row = row + this.player.forwardMove;
+                    if (isEmptyCell(row, col) && this.firstTurn) {
+                        addHighlight(row, col, potentialMoves);
                     }
                 }
             }
         }
         return potentialMoves;
-
-
     }
 
     promotion() {

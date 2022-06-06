@@ -165,17 +165,31 @@ function changeTurn() {
     playerTurn = (playerTurn + 1) % 2
 }
 
-function addTarget() {
-
+function addTarget(row, col, potentialMoves) {
+    let cellEl = document.getElementById(`${row},${col}`);
+    potentialMoves.push([row, col]);
+    cellEl.classList.add('target');
 }
 
-function addHighlight() {
-
+function addHighlight(row, col, potentialMoves) {
+    let cellEl = document.getElementById(`${row},${col}`);
+    potentialMoves.push([row, col]);
+    let divEl = document.createElement('div');
+    divEl.classList.add('highlighted')
+    cellEl.appendChild(divEl);
+    console.log(potentialMoves);
 }
 
 function isOutOfBounds(row, col) {
-    return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLS;
+    return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLUMNS;
 }
 
+function isEnemyPiece(row, col) {
+    return boardState[row][col] && boardState[row][col].player !== players[playerTurn];
+}
+
+function isEmptyCell(row, col) {
+    return !boardState[row][col];
+}
 /*--- Main ---*/
 init();
