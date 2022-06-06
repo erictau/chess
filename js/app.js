@@ -41,7 +41,7 @@ let player2 = {
     }
 }
 const players = [player1, player2];
-let areMovesHighlighted = false;
+let selectedPiece = null;
 let playerTurn = 0;
 
 /*--- Cache ---*/
@@ -132,22 +132,76 @@ function pieceSetup() {
 function handleBoardClick(evt) {
     // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
-    if (areMovesHighlighted) {
+    let coordinates = evt.target.parentElement.id.split(',');
+    let piece = selectPieceFromState(coordinates);
+    if (selectedPiece) {
+        // Checks if the player clicked on the same piece to deselect it.
+        let clickedID = evt.target.parentElement.id.split(',');
+        if (isMatchingArray(clickedID, selectedPiece.position)) {
+            clearRenderedMoves();
+            selectedPiece = null;
+            return;
+        } 
         
-    }
-    
-    if (evt.target.tagName === 'IMG') {
-        let coordinates = evt.target.parentElement.id.split(',');
-        selectPiece(coordinates);
+        // Checks if player clicked on a potential move to move piece to that location.
+        for (let i = 0; i < selectedPiece.potentialMoves.target.length; i++) {
+            if (isMatchingArray(clickedID, selectedPiece.potentialMoves.target[i])) {
+                selectedPiece.eat();
+                clearRenderedMoves();
+                clearMoveState();
+                return;
+            }
+        }
+        for (let i = 0; i < selectedPiece.potentialMoves.highlight.length; i++) {
+            if (isMatchingArray(clickedID, selectedPiece.potentialMoves.highlight[i])) {
+                selectedPiece.move();
+                clearRenderedMoves();
+                clearMoveState();
+                return;
+            }
+        }
+        
+
+        // deselect or move
+        // clear potentialMoves
+        // clear rendered moves
+        // change selectedPiece to null
+        
+    } else if (evt.target.tagName === 'IMG') {
+        // select piece and add its potential moves to potentialMoves
+        // render the potential moves
+        // Set selectedPiece to clicked piece
+        if (piece.player === players[playerTurn]){
+            piece.highlightMoves();
+        }
+    } else {
+        return;
     }
 }
 
 
-function selectPiece(coordinates) {
-    const piece = boardState[coordinates[0]][coordinates[1]];
-    if (piece.player === players[playerTurn]) {
-        piece.highlightMoves();
-    }
+function clearRenderedMoves() {
+    selectedPiece.potentialMoves.target.forEach(cell => {
+        selectPieceFromDOM(cell).classList.remove('target')
+    })
+    selectedPiece.potentialMoves.highlight.forEach(cell => {
+        selectPieceFromDOM(cell).innerHTML = '';
+    })
+}
+
+function clearMoveState() {
+    selectedPiece.potentialMoves.target = [];
+    selectedPiece.potentialMoves.highlight = [];
+    selectedPiece = null;
+}
+
+function selectPieceFromState(coordinates) {
+    return boardState[coordinates[0]][coordinates[1]];
+}
+
+
+function selectPieceFromDOM(coordinates) {
+    return document.getElementById(`${coordinates[0]},${coordinates[1]}`);
 }
 
 
@@ -170,27 +224,29 @@ function changeTurn() {
     playerTurn = (playerTurn + 1) % 2
 }
 
-function addTarget(row, col, potentialMoves) {
-    potentialMoves.target.push([row, col]);
-    areMovesHighlighted = true;
+function addTarget(row, col, piece) {
+    piece.potentialMoves.target.push([row, col]);
+    selectedPiece = piece;
 }
 
-function addHighlight(row, col, potentialMoves) {
-    potentialMoves.highlight.push([row, col]);
-    areMovesHighlighted = true;
+function addHighlight(row, col, piece) {
+    piece.potentialMoves.highlight.push([row, col]);
+    selectedPiece = piece;
 }
 
 function renderMoves(piece) {
     for (target of piece.potentialMoves.target) {
-        document.getElementById(`${target[0]},${target[1]}`).classList.add('target');
+        selectPieceFromDOM(target).classList.add('target');
     }
     for (highlight of piece.potentialMoves.highlight) {
-        let cellEl = document.getElementById(`${highlight[0]},${highlight[1]}`);
+        let cellEl = selectPieceFromDOM(highlight);
         let divEl = document.createElement('div');
         divEl.classList.add('highlighted');
         cellEl.appendChild(divEl);
     }
 }
+
+
 
 function isOutOfBounds(row, col) {
     return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLUMNS;
@@ -202,6 +258,16 @@ function isEnemyPiece(row, col) {
 
 function isEmptyCell(row, col) {
     return !boardState[row][col];
+}
+
+// Compares 2 arrays and returns true or false based on if all elements in the arrays match.
+function isMatchingArray(arrA, arrB) {
+    if (arrA.length !== arrB.length) return false;
+
+    for (let i = 0; i < arrA.length; i++) {
+        if (arrA[i].toString() !== arrB[i].toString()) return false;
+    }
+    return true;
 }
 /*--- Main ---*/
 init();

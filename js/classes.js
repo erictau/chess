@@ -12,7 +12,11 @@ class BoardPiece {
     }
 
     move() {
+        console.log("moving")
+    }
 
+    eat() {
+        console.log("eating")
     }
 }
 
@@ -31,18 +35,13 @@ class King extends BoardPiece {
         this.potentialMoves.highlight = [];
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
-                // Check if cell is occupied
-                // If occupied by enemy piece, add target class to that div
-                // If not occupied, add div to highlight the move. 
-                // Add all targets and highlighted cells to the potentialMoves array.
                 let row = this.position[0] + i;
                 let col = this.position[1] + j;
-                // If out of bounds, break.
                 if (isOutOfBounds(row, col)) continue;
                 if (isEnemyPiece(row, col)) {
-                    addTarget(row, col, this.potentialMoves);
+                    addTarget(row, col, this);
                 } else if (isEmptyCell(row, col)) {
-                    addHighlight(row, col, this.potentialMoves);
+                    addHighlight(row, col, this);
                 }
             }
         }
@@ -133,15 +132,15 @@ class Pawn extends BoardPiece {
             // Pawns can only eat other pieces diagonally. Therefore, we can only add a opponent piece as a target when i != 0.
             if (i !== 0) {
                 if (isEnemyPiece(row, col)) {
-                    addTarget(row, col, this.potentialMoves);
+                    addTarget(row, col, this);
                 }
             } else {
                 if (isEmptyCell(row, col)) {
-                    addHighlight(row, col, this.potentialMoves);
+                    addHighlight(row, col, this);
                     // Updates row value and checks the next cell if it is the pawn's first turn.
                     row = row + this.player.forwardMove;
                     if (isEmptyCell(row, col) && this.firstTurn) {
-                        addHighlight(row, col, this.potentialMoves);
+                        addHighlight(row, col, this);
                     }
                 }
             }
