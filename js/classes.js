@@ -27,6 +27,7 @@ class BoardPiece {
     }
 }
 
+
 class King extends BoardPiece {
     constructor(position, player) {
         super(position, player);
@@ -55,6 +56,7 @@ class King extends BoardPiece {
         renderMoves(this);
     }
 }
+
 
 class Queen extends BoardPiece {
     constructor(position, player) {
@@ -110,6 +112,7 @@ class Bishop extends BoardPiece {
     }
 }
 
+
 class Knight extends BoardPiece {
     constructor(position, player) {
         super(position, player);
@@ -142,6 +145,7 @@ class Knight extends BoardPiece {
     }
 }
 
+
 class Rook extends BoardPiece {
     constructor(position, player) {
         super(position, player);
@@ -164,6 +168,7 @@ class Rook extends BoardPiece {
         renderMoves(this);
     }
 }
+
 
 class Pawn extends BoardPiece {
     constructor(position, player) {
@@ -209,10 +214,28 @@ class Pawn extends BoardPiece {
     }
 
     promotion() {
+        isPawnPromoting = true;
         // Give player option for promotion. Render a message and new buttons in a dashboard area.
-        renderPromotion();
-        // Once selected, instantiate the appropriate piece and replace "this" with the new piece. aka, this = new Queen(...)
-        console.log("im getting promoted")
-        // Remove the options and message.
+        renderPromotion(this.player);
+        let id = `Player${this.player.id.charAt(this.player.id.length-1)}`
+        let thisObj = selectPieceFromPieces(this, this.player)
+        document.querySelector(`#${id} .player-msg`).addEventListener('click', (evt) => {
+            // Once selected, instantiate the appropriate piece and replace "this" with the new piece. aka, this = new Queen(...)
+            if (evt.target.innerText === 'Queen') {
+                this.player.pieces[thisObj] = new Queen(this.position, this.player);
+            } else if (evt.target.innerText === 'Bishop') {
+                this.player.pieces[thisObj] = new Bishop(this.position, this.player);
+            } else if (evt.target.innerText === 'Knight') {
+                this.player.pieces[thisObj] = new Knight(this.position, this.player);
+            } else if (evt.target.innerText === 'Rook') {
+                this.player.pieces[thisObj] = new Rook(this.position, this.player);
+            }
+            boardState[this.position[0]][this.position[1]] = this.player.pieces[thisObj];
+            
+            // Remove the options and message.
+            isPawnPromoting = false;
+            renderPromotion(this.player);
+            renderPieces();
+        })
     }
 }

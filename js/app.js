@@ -13,7 +13,7 @@ let boardState = [
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null]]
 let player1 = {
-    id: 'player 1',
+    id: 'Player 1',
     startRow: 7,
     forwardMove: -1,
     color: 'dark',
@@ -27,7 +27,7 @@ let player1 = {
     }
 }
 let player2 = {
-    id: 'player 2',
+    id: 'Player 2',
     startRow: 0,
     forwardMove: 1,
     color: 'light',
@@ -42,6 +42,7 @@ let player2 = {
 }
 const players = [player1, player2];
 let selectedPiece = null;
+let isPawnPromoting = false;
 let playerTurn = 0;
 
 /*--- Cache ---*/
@@ -60,7 +61,6 @@ function init() {
     renderPieces();
 }
 
-
 function resetPieces() {
     // Clear board
     for (let i = 0; i < boardState.length; i++) {
@@ -69,7 +69,6 @@ function resetPieces() {
         }
     }
 }
-
 
 // Programmatically sets up the 64 divs representing each board position. Sets each div's class & id and appends to board.
 function boardSetup() {
@@ -94,7 +93,6 @@ function boardSetup() {
         board.appendChild(divEl);
     }
 }
-
 
 function pieceSetup() {
     // Instantiate all pieces for both sides. Will need to hard-code the coordinates.
@@ -133,6 +131,9 @@ function pieceSetup() {
 /*----------------------------------------------- Handler Functions -----------------------------------------------*/
 
 function handleBoardClick(evt) {
+    // If a pawn is in the progress of being promoted, pause all clicks on the board.
+    if (isPawnPromoting) return;
+
     // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
     let coordinates = evt.target.parentElement.id.split(',');
@@ -174,22 +175,20 @@ function handleBoardClick(evt) {
     }
 }
 
+
 /*----------------------------------------------- Helper Functions -----------------------------------------------*/
 
 function isOutOfBounds(row, col) {
     return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLUMNS;
 }
 
-
 function isEnemyPiece(row, col) {
     return boardState[row][col] && boardState[row][col].player !== players[playerTurn];
 }
 
-
 function isEmptyCell(row, col) {
     return !boardState[row][col];
 }
-
 
 // Compares 2 arrays and returns true or false based on if all elements in the arrays match.
 function isMatchingArray(arrA, arrB) {
@@ -201,25 +200,29 @@ function isMatchingArray(arrA, arrB) {
     return true;
 }
 
-
 function clearMoveState() {
     selectedPiece.potentialMoves.target = [];
     selectedPiece.potentialMoves.highlight = [];
     selectedPiece = null;
 }
 
-
 function selectPieceFromState(coordinates) {
     if (coordinates.length !== 2) return;
     return boardState[coordinates[0]][coordinates[1]];
 }
-
 
 function selectPieceFromDOM(coordinates) {
     if (coordinates.length !== 2) return;
     return document.getElementById(`${coordinates[0]},${coordinates[1]}`);
 }
 
+function selectPieceFromPieces(piece, player) {
+    for (let obj in player.pieces) {
+        if (player.pieces[obj] === piece) {
+            return obj
+        }
+    }
+}
 
 function checkWinCondition() {
     if (players[(playerTurn + 1) % 2].pieces.king.position === 'removed') {
@@ -238,6 +241,7 @@ function changeTurn() {
         playerTurn = -1;
         return;
     }
+    renderChangeTurn();
     playerTurn = (playerTurn + 1) % 2;
 }
 
@@ -273,7 +277,6 @@ function recursiveCheck(row, col, rowAdder, colAdder, piece) {
 }
 
 
-
 /*----------------------------------------------- Render Functions -----------------------------------------------*/
 
 function clearRenderedMoves() {
@@ -284,7 +287,6 @@ function clearRenderedMoves() {
         selectPieceFromDOM(cell).innerHTML = '';
     })
 }
-
 
 function renderPieces() {
     boardState.forEach((row, i) => {
@@ -300,7 +302,6 @@ function renderPieces() {
     })
 }
 
-
 function renderMoves(piece) {
     for (target of piece.potentialMoves.target) {
         selectPieceFromDOM(target).classList.add('target');
@@ -313,15 +314,38 @@ function renderMoves(piece) {
     }
 }
 
-function renderPromotion() {
+function renderPromotion(player) {
+    // Clear message board first
+    let id = `Player${player.id.charAt(player.id.length-1)}`
+    let promoMsgDiv = document.querySelector(`#${id} .player-msg`);
+    promoMsgDiv.innerHTML = ''
 
+    // Only adds buttons if the isPawnPromoting state is true. 
+    if (isPawnPromoting) {
+        let options = ['Queen', 'Bishop', 'Knight', 'Rook'];
+
+        // Creates and adds the message to DOM
+        let msgEl = document.createElement('div')
+        msgEl.innerText = 'Please select a piece to promote to.'
+        promoMsgDiv.appendChild(msgEl);
+        
+        // Adds each button to DOM
+        options.forEach(piece => {
+            let btnEl = document.createElement('button');
+            btnEl.innerText = piece;
+            btnEl.classList.add('btn', 'btn-secondary');
+            promoMsgDiv.appendChild(btnEl);
+        })
+    }
+}
+
+function renderChangeTurn() {
+    // Every time the turn is changed, set the active player's text to black and the other player's text to gray. 
 }
 
 
 
 
 
-
-
-/*--- Main ---*/
+/*----------------------------------------------- Main -----------------------------------------------*/
 init();
