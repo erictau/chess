@@ -67,7 +67,22 @@ class Queen extends BoardPiece {
     }
 
     highlightMoves() {
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
+        
+        // Straights
+        for (let i = -1; i <= 1; i += 2) {
+        recursiveCheck(this.position[0], this.position[1], i, 0, this)
+        recursiveCheck(this.position[0], this.position[1], 0, i, this)
+        }
 
+        // Diagonals
+        for (let i = -1; i <= 1; i += 2) {
+            for (let j = -1; j <= 1; j += 2) {
+                recursiveCheck(this.position[0], this.position[1], i, j, this)
+            }
+        }
+        renderMoves(this);
     }
 }
 
@@ -82,7 +97,16 @@ class Bishop extends BoardPiece {
     }
 
     highlightMoves() {
-
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
+        
+        // Diagonals only
+        for (let i = -1; i <= 1; i += 2) {
+            for (let j = -1; j <= 1; j += 2) {
+                recursiveCheck(this.position[0], this.position[1], i, j, this)
+            }
+        }
+        renderMoves(this);
     }
 }
 
@@ -97,7 +121,24 @@ class Knight extends BoardPiece {
     }
 
     highlightMoves() {
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
 
+        // Hardcoded the knight's movement patterns. 
+        let knightMovement = [[2, 1], [-2, -1], [2, -1], [-2, 1], [1, 2], [-1, -2], [-1, 2], [1, -2]];
+
+        for (let i = 0; i < knightMovement.length; i++) {
+            let row = this.position[0] + knightMovement[i][0];
+            let col = this.position[1] + knightMovement[i][1];
+            if (isOutOfBounds(row, col)) continue;
+
+            if (isEnemyPiece(row, col)) {
+                addTarget(row, col, this);
+            } else if (isEmptyCell(row, col)) {
+                addHighlight(row, col, this);
+            }
+        }
+        renderMoves(this);
     }
 }
 
@@ -112,7 +153,15 @@ class Rook extends BoardPiece {
     }
 
     highlightMoves() {
-
+        this.potentialMoves.target = [];
+        this.potentialMoves.highlight = [];
+        
+        // Straights only
+        for (let i = -1; i <= 1; i += 2) {
+        recursiveCheck(this.position[0], this.position[1], i, 0, this)
+        recursiveCheck(this.position[0], this.position[1], 0, i, this)
+        }
+        renderMoves(this);
     }
 }
 

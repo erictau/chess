@@ -251,6 +251,27 @@ function addHighlight(row, col, piece) {
     selectedPiece = piece;
 }
 
+function recursiveCheck(row, col, rowAdder, colAdder, piece) {
+    // Base Case
+    updatedRow = row + rowAdder;
+    updatedCol = col + colAdder;
+    if (isOutOfBounds(updatedRow, updatedCol)) {
+        return;
+    }
+    if (isEnemyPiece(updatedRow, updatedCol)) {
+        addTarget(updatedRow, updatedCol, piece);
+        return;
+    }
+    if (!isEmptyCell(updatedRow, updatedCol) && !isEnemyPiece(updatedRow, updatedCol)) return;
+ 
+    // Action
+    if (isEmptyCell(updatedRow, updatedCol)) addHighlight(updatedRow, updatedCol, piece);
+
+    // Recursive Case
+    recursiveCheck(updatedRow, updatedCol, rowAdder, colAdder, piece);
+    
+}
+
 
 
 /*----------------------------------------------- Render Functions -----------------------------------------------*/
