@@ -210,19 +210,34 @@ function clearMoveState() {
 
 
 function selectPieceFromState(coordinates) {
+    if (coordinates.length !== 2) return;
     return boardState[coordinates[0]][coordinates[1]];
 }
 
 
 function selectPieceFromDOM(coordinates) {
+    if (coordinates.length !== 2) return;
     return document.getElementById(`${coordinates[0]},${coordinates[1]}`);
 }
 
+
+function checkWinCondition() {
+    if (players[(playerTurn + 1) % 2].pieces.king.position === 'removed') {
+        console.log(`${players[playerTurn].id} is the winner!`);
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function changeTurn() {
     clearRenderedMoves();
     clearMoveState();
     renderPieces();
+    if (checkWinCondition()) {
+        playerTurn = -1;
+        return;
+    }
     playerTurn = (playerTurn + 1) % 2;
 }
 
