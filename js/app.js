@@ -50,7 +50,8 @@ const board = document.querySelector('#board');
 /*--- Event Listeners ---*/
 board.addEventListener('click', handleBoardClick);
 
-/*--- Functions ---*/
+/*----------------------------------------------- Setup Functions -----------------------------------------------*/
+
 function init() { 
     playerTurn = 0;
     resetPieces();
@@ -129,6 +130,8 @@ function pieceSetup() {
 }
 
 
+/*----------------------------------------------- Handler Functions -----------------------------------------------*/
+
 function handleBoardClick(evt) {
     // When a cell is clicked, take the id of the cell and check the board state to see which chess piece is there. 
     // If the chess piece we clicked belongs to the player whose turn it is, then we will proceed to highlight moves. Else, nothing happens.
@@ -171,21 +174,40 @@ function handleBoardClick(evt) {
     }
 }
 
+/*----------------------------------------------- Helper Functions -----------------------------------------------*/
 
-function clearRenderedMoves() {
-    selectedPiece.potentialMoves.target.forEach(cell => {
-        selectPieceFromDOM(cell).classList.remove('target')
-    })
-    selectedPiece.potentialMoves.highlight.forEach(cell => {
-        selectPieceFromDOM(cell).innerHTML = '';
-    })
+function isOutOfBounds(row, col) {
+    return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLUMNS;
 }
+
+
+function isEnemyPiece(row, col) {
+    return boardState[row][col] && boardState[row][col].player !== players[playerTurn];
+}
+
+
+function isEmptyCell(row, col) {
+    return !boardState[row][col];
+}
+
+
+// Compares 2 arrays and returns true or false based on if all elements in the arrays match.
+function isMatchingArray(arrA, arrB) {
+    if (arrA.length !== arrB.length) return false;
+
+    for (let i = 0; i < arrA.length; i++) {
+        if (arrA[i].toString() !== arrB[i].toString()) return false;
+    }
+    return true;
+}
+
 
 function clearMoveState() {
     selectedPiece.potentialMoves.target = [];
     selectedPiece.potentialMoves.highlight = [];
     selectedPiece = null;
 }
+
 
 function selectPieceFromState(coordinates) {
     return boardState[coordinates[0]][coordinates[1]];
@@ -194,21 +216,6 @@ function selectPieceFromState(coordinates) {
 
 function selectPieceFromDOM(coordinates) {
     return document.getElementById(`${coordinates[0]},${coordinates[1]}`);
-}
-
-
-function renderPieces() {
-    boardState.forEach((row, i) => {
-        row.forEach((cell, j) => {
-            // Clear the contents of the board before adding a new img element.
-            board.children[`${i},${j}`].innerHTML = ''
-            if (cell) {
-                let imgEl = document.createElement('img');
-                imgEl.src = cell.img;
-                board.children[`${i},${j}`].appendChild(imgEl);
-            }
-        })
-    })
 }
 
 
@@ -229,6 +236,35 @@ function addHighlight(row, col, piece) {
     selectedPiece = piece;
 }
 
+
+
+/*----------------------------------------------- Render Functions -----------------------------------------------*/
+
+function clearRenderedMoves() {
+    selectedPiece.potentialMoves.target.forEach(cell => {
+        selectPieceFromDOM(cell).classList.remove('target')
+    })
+    selectedPiece.potentialMoves.highlight.forEach(cell => {
+        selectPieceFromDOM(cell).innerHTML = '';
+    })
+}
+
+
+function renderPieces() {
+    boardState.forEach((row, i) => {
+        row.forEach((cell, j) => {
+            // Clear the contents of the board before adding a new img element.
+            board.children[`${i},${j}`].innerHTML = ''
+            if (cell) {
+                let imgEl = document.createElement('img');
+                imgEl.src = cell.img;
+                board.children[`${i},${j}`].appendChild(imgEl);
+            }
+        })
+    })
+}
+
+
 function renderMoves(piece) {
     for (target of piece.potentialMoves.target) {
         selectPieceFromDOM(target).classList.add('target');
@@ -241,28 +277,15 @@ function renderMoves(piece) {
     }
 }
 
+function renderPromotion() {
 
-
-function isOutOfBounds(row, col) {
-    return row < 0 || row >= NUM_ROWS || col < 0 || col >= NUM_COLUMNS;
 }
 
-function isEnemyPiece(row, col) {
-    return boardState[row][col] && boardState[row][col].player !== players[playerTurn];
-}
 
-function isEmptyCell(row, col) {
-    return !boardState[row][col];
-}
 
-// Compares 2 arrays and returns true or false based on if all elements in the arrays match.
-function isMatchingArray(arrA, arrB) {
-    if (arrA.length !== arrB.length) return false;
 
-    for (let i = 0; i < arrA.length; i++) {
-        if (arrA[i].toString() !== arrB[i].toString()) return false;
-    }
-    return true;
-}
+
+
+
 /*--- Main ---*/
 init();

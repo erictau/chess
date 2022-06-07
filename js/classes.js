@@ -15,6 +15,10 @@ class BoardPiece {
         boardState[this.position[0]][this.position[1]] = null;
         this.position = newCell;
         boardState[this.position[0]][this.position[1]] = this;
+        // Checks if the piece is a Pawn and it has reached the last row before invoking the promotion method.
+        if (this instanceof Pawn && this.position[0] === this.player.startRow + this.player.forwardMove * 7) {
+            this.promotion();
+        }
     }
 
     eat(newCell) {
@@ -156,6 +160,10 @@ class Pawn extends BoardPiece {
     }
 
     promotion() {
-
+        // Give player option for promotion. Render a message and new buttons in a dashboard area.
+        renderPromotion();
+        // Once selected, instantiate the appropriate piece and replace "this" with the new piece. aka, this = new Queen(...)
+        console.log("im getting promoted")
+        // Remove the options and message.
     }
 }
