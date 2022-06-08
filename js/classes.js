@@ -200,11 +200,13 @@ class Pawn extends BoardPiece {
                     addTarget(row, col, this);
                 }
             } else {
+                console.log('Reached empty cell check', typeof row, typeof col);
                 if (isEmptyCell(row, col)) {
+                    console.log("Added the empty cell")
                     addHighlight(row, col, this);
                     // Updates row value and checks the next cell if it is the pawn's first turn.
                     row = row + this.player.forwardMove;
-                    if (isEmptyCell(row, col) && this.firstTurn) {
+                    if (this.firstTurn && isEmptyCell(row, col)) {
                         addHighlight(row, col, this);
                     }
                 }

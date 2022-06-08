@@ -237,6 +237,7 @@ function checkWinCondition() {
 
 
 function changeTurn() {
+    // renderRemovedPieces();
     clearRenderedMoves();
     clearMoveState();
     renderPieces();
@@ -307,10 +308,10 @@ function renderPieces() {
 }
 
 function renderMoves(piece) {
-    for (target of piece.potentialMoves.target) {
+    for (target of piece.potentialMoves['target']) {
         selectPieceFromDOM(target).classList.add('target');
     }
-    for (highlight of piece.potentialMoves.highlight) {
+    for (highlight of piece.potentialMoves['highlight']) {
         let cellEl = selectPieceFromDOM(highlight);
         let divEl = document.createElement('div');
         divEl.classList.add('highlighted');
@@ -369,7 +370,28 @@ function renderWinner() {
 }
 
 function renderRemovedPieces() {
-    // 
+    let p1 = document.querySelector('#Player1 .opponents-pieces');
+    let p2 = document.querySelector('#Player2 .opponents-pieces');
+
+    while (p1.children.length > 1) {
+        p1.removeChild(p1.lastElementChild);
+    }
+    
+    while (p2.children.length > 1) {
+        p2.removeChild(p2.lastElementChild);
+    }    
+
+    // Loop through all pieces to check for removed pieces
+    players.forEach(player => {
+        for (let piece in player.pieces) {
+            if (player.pieces[piece].position === 'removed') {
+                let id = `Player${player.id.charAt(player.id.length - 1)}`
+                let imgEl = document.createElement('img');
+                imgEl.setAttribute('src', `${player.pieces[piece].img}`)
+                document.querySelector(`#${id} .opponents-pieces`).appendChild(imgEl);
+            }
+        }
+    })
 }
 
 
