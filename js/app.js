@@ -152,20 +152,15 @@ function handleBoardClick(evt) {
             clearMoveState();
             return;
         } 
-        
         // Checks if player clicked on a potential move to move piece to that location.
-        for (let i = 0; i < selectedPiece.potentialMoves.target.length; i++) {
-            if (isMatchingArray(clickedID, selectedPiece.potentialMoves.target[i])) {
-                selectedPiece.eat(selectedPiece.potentialMoves.target[i]);
-                changeTurn();
-                return;
-            }
-        }
-        for (let i = 0; i < selectedPiece.potentialMoves.highlight.length; i++) {
-            if (isMatchingArray(clickedID, selectedPiece.potentialMoves.highlight[i])) {
-                selectedPiece.move(selectedPiece.potentialMoves.highlight[i]);
-                changeTurn();
-                return;
+        for (let type in selectedPiece.potentialMoves) {
+            for (let i = 0; i < selectedPiece.potentialMoves[type].length ; i++) {
+                let move = selectedPiece.potentialMoves[type][i];
+                if (isMatchingArray(clickedID, move)) {
+                    type === 'target' ? selectedPiece.eat(move) : selectedPiece.move(move);
+                    changeTurn();
+                    return;
+                }
             }
         }
         
@@ -233,7 +228,6 @@ function selectPieceFromPieces(piece, player) {
 function checkWinCondition() {
     if (players[(playerTurn + 1) % 2].pieces.king.position === 'removed') {
         winner = players[playerTurn].id;
-        console.log(`${winner} is the winner!`);
         return true;
     } else {
         return false;
@@ -374,6 +368,9 @@ function renderWinner() {
     }
 }
 
+function renderRemovedPieces() {
+    // 
+}
 
 
 
