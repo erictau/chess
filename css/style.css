@@ -29,7 +29,7 @@ h3 {
 }
 
 #board img:hover {
-    animation: shake 0.5s;
+    animation: shake .75s;
     animation-iteration-count: infinite;
 }
 
@@ -42,7 +42,7 @@ h3 {
     justify-self: center;
     align-items: center;
     color: gray;
-    background-color: rgba(40, 27, 27, 0.7);
+    background-color: rgba(27, 27, 27, 0.8);
     border-radius: 20px;
 }
 
@@ -67,12 +67,12 @@ h3 {
 
 /* Classes applied to active player and loser/winner. Changes every time a move is made. */
 .active-player h2 {
-    color: black;
+    color: gold;
     text-decoration: underline;
 }
 
 .active-player div {
-    color: black;
+    color: gold;
 }
 
 .lost {
@@ -97,18 +97,25 @@ h3 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    height: 500px;
-    width: 500px;
+    height: 600px;
+    width: 600px;
     border: 1px solid black;
     margin: auto;
-
+    background: gray;
 }
 
 .board-cell {
     display: flex;
     height: 100%;
     width: 100%;
+    align-items: center;
+    justify-content: center;
 }
+
+.board-cell img {
+    width: 80%;
+}
+
 
 .light {
     background-color: tan;

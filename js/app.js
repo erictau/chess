@@ -237,7 +237,7 @@ function checkWinCondition() {
 
 
 function changeTurn() {
-    // renderRemovedPieces();
+    renderRemovedPieces();
     clearRenderedMoves();
     clearMoveState();
     renderPieces();
