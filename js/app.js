@@ -14,6 +14,7 @@ let boardState = [
     [null, null, null, null, null, null, null, null]]
 let player1 = {
     id: 'Player 1',
+    wins: 0,
     startRow: 7,
     forwardMove: -1,
     color: 'dark',
@@ -29,6 +30,7 @@ let player1 = {
 let player2 = {
     id: 'Player 2',
     startRow: 0,
+    wins: 0,
     forwardMove: 1,
     color: 'light',
     pieces: {
@@ -44,6 +46,7 @@ const players = [player1, player2];
 let selectedPiece = null;
 let isPawnPromoting = false;
 let playerTurn = 0;
+let winner = '';
 
 /*--- Cache ---*/
 const board = document.querySelector('#board');
@@ -55,6 +58,9 @@ board.addEventListener('click', handleBoardClick);
 
 function init() { 
     playerTurn = 0;
+    winner = '';
+    selectedPiece = null;
+    isPawnPromoting = false;
     resetPieces();
     boardSetup();
     pieceSetup();
@@ -226,18 +232,22 @@ function selectPieceFromPieces(piece, player) {
 
 function checkWinCondition() {
     if (players[(playerTurn + 1) % 2].pieces.king.position === 'removed') {
-        console.log(`${players[playerTurn].id} is the winner!`);
+        winner = players[playerTurn].id;
+        console.log(`${winner} is the winner!`);
         return true;
     } else {
         return false;
     }
 }
 
+
+
 function changeTurn() {
     clearRenderedMoves();
     clearMoveState();
     renderPieces();
     if (checkWinCondition()) {
+        renderWinner();
         playerTurn = -1;
         return;
     }
@@ -341,8 +351,28 @@ function renderPromotion(player) {
 
 function renderChangeTurn() {
     // Every time the turn is changed, set the active player's text to black and the other player's text to gray. 
+    document.getElementById('Player1').classList.toggle('active-player');
+    document.getElementById('Player2').classList.toggle('active-player');
 }
 
+function renderWinner() {
+    // Once a winner is declared, modify the DOM. Show "Winner: Player X" and update the loser with a strikeout and red font. 
+    
+    // First, set values to defaults
+    document.querySelector('#Player1 h2').innerHTML = 'Player 1';
+    document.querySelector('#Player2 h2').innerHTML = 'Player 2';
+
+    if (winner) {
+        // Highlight the winner
+        let id = `Player${winner.charAt(winner.length - 1)}`;
+        document.querySelector(`#${id} h2`).innerHTML = `Winner: ${winner}!`;
+
+        // Cross off the loser
+        let loser = players[(playerTurn + 1) % 2].id;
+        let loserId = `Player${loser.charAt(loser.length - 1)}`;
+        document.querySelector(`#${loserId} h2`).classList.toggle('lost');
+    }
+}
 
 
 

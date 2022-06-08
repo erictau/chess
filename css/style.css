@@ -29,18 +29,31 @@ img {
     animation-iteration-count: infinite;
 }
 
-#player1, #player2 {
-
-}
-
-#player1 {
+#Player1 {
     grid-column: 1;
     grid-row: 3;
+    color: gray;
 }
 
-#player2 {
+#Player2 {
+    align-self: end;
     grid-column: 1;
     grid-row: 1;
+    color: gray;
+}
+
+.active-player h2 {
+    color: black;
+    text-decoration: underline;
+}
+
+.active-player div {
+    color: black;
+}
+
+.lost {
+    color: red;
+    text-decoration: line-through;
 }
 
 #messages {
