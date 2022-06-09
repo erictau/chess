@@ -85,7 +85,35 @@ h3 {
     color: gold;
 }
 
-.lost {
+@keyframes winningColorRotation {
+    0% {
+        color: #6666ff;
+    }
+    10% {
+        color: #0099ff;
+    }
+    50% {
+        color: #00ff00;
+    }
+    75% {
+        color: #ff3399;
+    }
+    100% {
+        color: #6666ff;
+    }
+}
+
+.win h2, .win h3 {
+    animation: winningColorRotation 2s linear;
+    animation-iteration-count: infinite;
+}
+
+.win img {
+    animation: shake .75s;
+    animation-iteration-count: infinite;
+}
+
+.lost h2, .lost h3 {
     color: red;
     text-decoration: line-through;
 }

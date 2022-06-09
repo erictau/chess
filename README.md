@@ -67,6 +67,7 @@
 
 ## Icebox Items
 <ul>
+    <li>Mobile Responsiveness</li>
     <li>Restart Button</li>
     <li>Score Tracker</li>
     <li>Timer to Limit Player Turn Length</li>

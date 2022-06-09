@@ -366,11 +366,12 @@ function renderWinner() {
         // Highlight the winner
         let id = `Player${winner.charAt(winner.length - 1)}`;
         document.querySelector(`#${id} h2`).innerHTML = `Winner: ${winner}!`;
+        document.querySelector(`#${id}`).classList.toggle('win');
 
         // Cross off the loser
         let loser = players[(playerTurn + 1) % 2].id;
         let loserId = `Player${loser.charAt(loser.length - 1)}`;
-        document.querySelector(`#${loserId} h2`).classList.toggle('lost');
+        document.querySelector(`#${loserId}`).classList.toggle('lost');
     }
 }
 
