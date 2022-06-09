@@ -1,0 +1,40 @@
+PseudoCode
+	- Win Conditions:
+		○ King is removed from board
+		○ Not going for checks & checkmates. (icebox item)
+	- State
+		○ Board - Stores piece positions in a 8x8 matrix (nested arrays)
+		○ Player1Pieces = […all P1 boardPiece/subclass instances  go here…]
+		○ Player2Pieces = […all P2 boardPiece/subclass instances  go here…]
+		
+	- Event Listeners
+		○ Board: if any piece is clicked, select that piece and run the highlightMoves() function to illuminate all potential moves on the board. 
+	- Classes
+		○ boardPiece (superclass for all pieces)
+			§ Id (pawn-1, rook-2, etc)
+			§ Position
+			§ Player (either 1 or 2) 
+			§ highlightMoves() - blank method to be overloaded. For pieces that can move multiple spaces in one direction, I can implement a while loop or recursion to add to the "potentialMoves" array.
+			§ Move() - checks array of highlightedMoves and can move to any of those cells. check if opponent piece is on your desired cell. If so, remove that piece and simultaneously move to the new position.
+		○ King
+			§ highlightMoves() - move 1 space any direction
+		○ Queen
+			§ highlightMoves() - moves multiple spaces any direction
+		○ Bishop
+			§ highlightMoves() - moves multiple spaces diagonal only
+		○ Knight
+			§ highlightMoves() - moves 2 spaces straight and 1 space to the side
+		○ Rook
+			§ highlightMoves() - move multiple spaces straight only
+		○ Pawn
+			§ firstTurn - boolean
+			§ highlightMoves() - moves forward only. moves straight 2 spaces (if firstTurn) or 1 space. If opponent pieces are in its diagonal position, can also move diagonal. 
+			§ promotion() - if a pawn reaches the end of the board, you can promote it with any piece you want. Remove the current pawn and instantiate a new piece (give player the option of rook, knight, bishop, or queen).
+			
+	- Functions:
+		○ InitGame() 
+		○ generateBoard()
+		○ HandleClicks()
+		○ checkWinCondition()
+		○ renderHighlightedMoves()
+		○ renderWinner()
