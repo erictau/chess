@@ -6,7 +6,7 @@
 body {
     height: 100vh;
     display: grid;
-    grid-template-rows: 1fr 3fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     background: url(https://i.pinimg.com/originals/a4/22/9a/a4229a483cf76e0b5458450c2e591ff3.png);
     background-size: auto;
     font-family: 'Audiowide', cursive;
@@ -17,7 +17,13 @@ img {
     -webkit-user-drag: none;
 }
 
+h2 {
+    font-size: 24px;
+    text-align: center;
+}
+
 h3 {
+    font-size: 20px;
     text-align: center;
 }
 
@@ -35,12 +41,12 @@ h3 {
     animation-iteration-count: infinite;
 }
 
-#Player1 > div, #Player2 > div{
+#Player1 > div, #Player2 > div {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     width: 500px;
-    height: 200px;
+    height: 130px;
     justify-self: center;
     align-items: center;
     color: gray;
@@ -71,8 +77,12 @@ h3 {
     text-align: center;
 }
 
-.player-msg button{
+.player-msg button {
     margin: 5px;
+}
+
+.opponents-pieces img {
+    height: 30px;
 }
 
 /* Classes applied to active player and loser/winner. Changes every time a move is made. */
@@ -120,10 +130,12 @@ h3 {
 /* End of classes intended for active player/winner. */
 
 #board-container {
+    justify-self: center;
+    align-self: center;
     display: flex;
     justify-content: center;
-    width: 800px;
-    height: 800px;
+    width: 500px;
+    height: 500px;
     border-radius: 30px;
     background: url(https://t4.ftcdn.net/jpg/00/85/19/41/360_F_85194107_hXtWOTU94BoL4DophssIonn78FNKP0dw.jpg);
     background-size: cover;
@@ -137,12 +149,12 @@ h3 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    height: 600px;
-    width: 600px;
+    height: 425px;
+    width: 425px;
     border: 1px solid black;
     margin: auto;
     background: gray;
-    border-radius: 30px;
+    border-radius: 20px;
     overflow: hidden;
     box-shadow: 6px 6px 2px rgba(27, 27, 27, 0.8);
 
@@ -201,3 +213,25 @@ h3 {
 }
 
 /* End of classes intended for highlighting player moves */
+
+@media only screen and (min-width: 1445px) {
+    #board-container {
+        min-height: 700px;
+        min-width: 700px;
+    }
+
+    #board {
+        min-height: 600px;
+        min-width: 600px;
+    }
+
+    .opponents-pieces img {
+        height: 45px;
+    }
+
+    #Player1 > div, #Player2 > div {
+        height: 200px;
+        width: 700px;
+    
+    }
+}
