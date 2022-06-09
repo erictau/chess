@@ -17,7 +17,10 @@ class BoardPiece {
         boardState[this.position[0]][this.position[1]] = this;
         // Checks if the piece is a Pawn and it has reached the last row before invoking the promotion method.
         if (this instanceof Pawn && this.position[0] === this.player.startRow + this.player.forwardMove * 7) {
-            this.promotion();
+            checkWinCondition();
+            if (!winner) {
+                this.promotion();
+            }
         }
     }
 
@@ -200,9 +203,7 @@ class Pawn extends BoardPiece {
                     addTarget(row, col, this);
                 }
             } else {
-                console.log('Reached empty cell check', typeof row, typeof col);
                 if (isEmptyCell(row, col)) {
-                    console.log("Added the empty cell")
                     addHighlight(row, col, this);
                     // Updates row value and checks the next cell if it is the pawn's first turn.
                     row = row + this.player.forwardMove;
@@ -238,6 +239,7 @@ class Pawn extends BoardPiece {
             isPawnPromoting = false;
             renderPromotion(this.player);
             renderPieces();
+            changeTurn();
         })
     }
 }

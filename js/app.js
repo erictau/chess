@@ -202,9 +202,11 @@ function isMatchingArray(arrA, arrB) {
 }
 
 function clearMoveState() {
-    selectedPiece.potentialMoves.target = [];
-    selectedPiece.potentialMoves.highlight = [];
-    selectedPiece = null;
+    if (selectedPiece) {
+        selectedPiece.potentialMoves.target = [];
+        selectedPiece.potentialMoves.highlight = [];
+        selectedPiece = null;
+    }
 }
 
 function selectPieceFromState(coordinates) {
@@ -234,8 +236,6 @@ function checkWinCondition() {
     }
 }
 
-
-
 function changeTurn() {
     renderRemovedPieces();
     clearRenderedMoves();
@@ -246,8 +246,10 @@ function changeTurn() {
         playerTurn = -1;
         return;
     }
+    if (!isPawnPromoting) {
     renderChangeTurn();
     playerTurn = (playerTurn + 1) % 2;
+    }
 }
 
 function addTarget(row, col, piece) {
@@ -285,12 +287,14 @@ function recursiveCheck(row, col, rowAdder, colAdder, piece) {
 /*----------------------------------------------- Render Functions -----------------------------------------------*/
 
 function clearRenderedMoves() {
-    selectedPiece.potentialMoves.target.forEach(cell => {
-        selectPieceFromDOM(cell).classList.remove('target')
-    })
-    selectedPiece.potentialMoves.highlight.forEach(cell => {
-        selectPieceFromDOM(cell).innerHTML = '';
-    })
+    if (selectedPiece) {
+        selectedPiece.potentialMoves.target.forEach(cell => {
+            selectPieceFromDOM(cell).classList.remove('target')
+        })
+        selectedPiece.potentialMoves.highlight.forEach(cell => {
+            selectPieceFromDOM(cell).innerHTML = '';
+        })
+    }
 }
 
 function renderPieces() {
@@ -338,7 +342,8 @@ function renderPromotion(player) {
         options.forEach(piece => {
             let btnEl = document.createElement('button');
             btnEl.innerText = piece;
-            btnEl.classList.add('btn', 'btn-secondary');
+            btnEl.classList.add('btn', 'btn-primary');
+            
             promoMsgDiv.appendChild(btnEl);
         })
     }
