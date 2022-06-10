@@ -47,7 +47,6 @@ let selectedPiece = null;
 let isPawnPromoting = false;
 let playerTurn = 0;
 let winner = '';
-let isCheck = false;
 
 /*--- Cache ---*/
 const board = document.querySelector('#board');
@@ -400,19 +399,6 @@ function renderRemovedPieces() {
         }
     })
 }
-
-/*----------------------------------------------- Check/Checkmate Feature -----------------------------------------------*/
-
-function checkCheckCondition() {
-    // If check condition is true, set isCheck to true, else set isCheck to false.
-    // Check condition: If an opponent piece's potential moves include a target on the king, then the player is in check. 
-    // If your move exposes your king to your opponent's potential moves, then that move is not allowed.
-    // Once in check, player's next move is required to get the player out of check.
-    // If there are no available moves to get the player out of check, then it is checkmate. 
-    // Where to call this function?
-    // This function should be run before and after 
-}
-
 
 
 
