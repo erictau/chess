@@ -222,19 +222,29 @@ class Pawn extends BoardPiece {
         renderPromotion(this.player);
         let id = `Player${this.player.id.charAt(this.player.id.length-1)}`
         let thisObj = selectPieceFromPieces(this, this.player)
+
         document.querySelector(`#${id} .player-msg`).addEventListener('click', (evt) => {
             // Once selected, instantiate the appropriate piece and replace "this" with the new piece. aka, this = new Queen(...)
-            if (evt.target.innerText === 'Queen') {
-                this.player.pieces[thisObj] = new Queen(this.position, this.player);
-            } else if (evt.target.innerText === 'Bishop') {
-                this.player.pieces[thisObj] = new Bishop(this.position, this.player);
-            } else if (evt.target.innerText === 'Knight') {
-                this.player.pieces[thisObj] = new Knight(this.position, this.player);
-            } else if (evt.target.innerText === 'Rook') {
-                this.player.pieces[thisObj] = new Rook(this.position, this.player);
-            }
-            boardState[this.position[0]][this.position[1]] = this.player.pieces[thisObj];
+
+            let position = this.position;
+            let player = this.player;
             
+            if (evt.target.innerText === 'Queen') {
+                this.player.pieces[thisObj] = new Queen(position, player);
+            } else if (evt.target.innerText === 'Bishop') {
+                this.player.pieces[thisObj] = new Bishop(position, player);
+            } else if (evt.target.innerText === 'Knight') {
+                this.player.pieces[thisObj] = new Knight(position, player);
+            } else if (evt.target.innerText === 'Rook') {
+                this.player.pieces[thisObj] = new Rook(position, player);
+            }
+
+            boardState[position[0]][position[1]] = player.pieces[thisObj];
+            if (this.position !== 'removed') {
+                this.position = 'promoted';
+            }
+
+
             // Remove the options and message.
             isPawnPromoting = false;
             renderPromotion(this.player);
